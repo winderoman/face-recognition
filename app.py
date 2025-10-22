@@ -22,7 +22,7 @@ import shutil
 ESTUDIANTES_FILE = "estudiantes.json"
 ASISTENCIAS_FILE = "asistencias.json"
 FOTOS_DIR = "fotos_estudiantes"
-THRESHOLD = 0.4  # Umbral de similitud (menor = más estricto)
+THRESHOLD = 0.10  # Umbral de similitud (menor = más estricto)
 
 # Crear carpetas si no existen
 if not os.path.exists(FOTOS_DIR):
@@ -293,7 +293,7 @@ elif opcion == "➕ Registrar":
         codigo = st.text_input("Código*", placeholder="Ej: EST001")
         nombre = st.text_input("Nombre*", placeholder="Ej: Juan")
         apellido = st.text_input("Apellido*", placeholder="Ej: Pérez")
-        email = st.text_input("Email", placeholder="juan@email.com")
+        #email = st.text_input("Email", placeholder="juan@email.com")
     
     with col2:
         st.subheader("📸 Foto del Estudiante")
@@ -366,7 +366,7 @@ elif opcion == "➕ Registrar":
                 cv2.imwrite(foto_path, st.session_state['foto_registro'])
                 
                 # Registrar estudiante
-                exito, mensaje = agregar_estudiante(codigo, nombre, apellido, email, foto_path)
+                exito, mensaje = agregar_estudiante(codigo, nombre, apellido, "user@ciaf.edu.co", foto_path)
                 
                 if exito:
                     st.success(f"✅ {mensaje}")
@@ -419,6 +419,11 @@ elif opcion == "✅ Asistencia":
             
             foto_rgb = cv2.cvtColor(foto_mostrar, cv2.COLOR_BGR2RGB)
             st.image(foto_rgb, caption=f"Rostros: {cantidad}", width='content')
+
+            # Botón para limpiar foto
+            if st.button("🗑️ Limpiar Foto", use_container_width=True, key="limpiar_asist"):
+                del st.session_state['foto_asistencia']
+                st.rerun()
     
     with col2:
         st.subheader("🔍 Resultado")
